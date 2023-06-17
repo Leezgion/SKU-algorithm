@@ -93,7 +93,7 @@ onBeforeMount(() => {
 });
 ```
 
-> 如果我们使用根据 skuArr 循环匹配 properties 的话,规格类别越多我们需要嵌套循环的却多,这样的益处也不大。
+> 如果我们使用根据 skuArr 循环匹配 properties 的话,规格类别越多我们需要嵌套循环的越多,这样的益处也不大。
 > 观察下面的矩阵会不会有些灵感
 
 <table>
@@ -332,25 +332,25 @@ const handleClickAttribute = (propertyIndex, attributeIndex) => {
     });
   }
   state.selected = [];
-  state.properties.forEach((property: any) => {
-    property.attributes.forEach((attr: any) => {
+  state.properties.forEach((property) => {
+    property.attributes.forEach((attr) => {
       if (attr.isActive) {
         state.selected.push(attr.value);
       }
     });
   });
-  state.properties.forEach((prop: any) => {
-    prop.attributes.forEach((attr: any) => {
+  state.properties.forEach((prop) => {
+    prop.attributes.forEach((attr) => {
       attr.isDisabled = !canAttributeSelect(attr);
     });
   });
 };
-const canAttributeSelect = (attribute: any) => {
+const canAttributeSelect = (attribute) => {
   if (!state.selected || !state.selected.length || attribute.isActive) {
     return true;
   }
   let res = [];
-  state.selected.forEach((value: any) => {
+  state.selected.forEach((value) => {
     const index1 = state.vertexArr.indexOf(value);
     const index2 = state.vertexArr.indexOf(attribute.value);
     res.push(state.matrixArr[index1][index2]);
