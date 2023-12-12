@@ -4,7 +4,7 @@
 >
 > ### 业务场景
 >
-> 在设计与实现商城项目中,大部分情况下都会涉及到用户购买商品的场景,在遇到商品拥有多种规格属性时,前端需要实现根据服务端返回的该项商品数据来进行不同情况的渲染。例如首先渲染该项商品的所有规格属性
+> 在设计与实现商城项目中，大部分情况下都会涉及到用户购买商品的场景，在遇到商品拥有多种规格属性时，前端需要实现根据服务端返回的该项商品数据来进行不同情况的渲染。例如首先渲染该项商品的所有规格属性
 
 ```javascript
 //Vue.js version 3.0+     <script setup>
@@ -37,7 +37,7 @@ const state = reactive({
       ],
     },
     {
-      name:'运行内存',
+      name:'运行内存'，
       attributes:
       [
         {
@@ -51,9 +51,9 @@ const state = reactive({
           isDisabled: false,
         },
       ],
-    },
+    }，
     {
-      name:'内部存储',
+      name:'内部存储'，
       attributes:
       [
         {
@@ -93,7 +93,7 @@ onBeforeMount(() => {
 });
 ```
 
-> 如果我们使用根据 skuArr 循环匹配 properties 的话,规格类别越多我们需要嵌套循环的越多,这样的益处也不大。
+> 如果我们使用根据 skuArr 循环匹配 properties 的话，规格类别越多我们需要嵌套循环的却多，这样的益处也不大。
 > 观察下面的矩阵会不会有些灵感
 
 <table>
@@ -179,7 +179,7 @@ onBeforeMount(() => {
   </tr>
 </table>
 
-> 细数这是个 7×7 的矩阵 `计算机中也就是二维数组` ,这是因为在 properties 中我们一共有 7 个 value`规格属性`,我们把这 7 个规格属性组合成一个顶点数组即`vertexArr['飞雪','银河','苍穹','8G','12G','128G','256G']`.如果有 n 个`规格属性`,那么就是 n×n 的矩阵。当使用二维数组`matrixArr[][]`时明显我们可以使用`行+列` 两层 forEach 循环就可以匹配出想要的渲染情况。
+> 细数这是个 7×7 的矩阵 `计算机中也就是二维数组` ，这是因为在 properties 中我们一共有 7 个 value`规格属性`,我们把这 7 个规格属性组合成一个顶点数组即`vertexArr['飞雪','银河','苍穹','8G','12G','128G','256G']`.如果有 n 个`规格属性`,那么就是 n×n 的矩阵。当使用二维数组`matrixArr[][]`时明显我们可以使用`行+列` 两层 forEach 循环就可以匹配出想要的渲染情况。
 
 ```javascript
 const initEmptyMatrixArr = () => {
@@ -299,7 +299,7 @@ const initMatrixArr = () => {
 //initMatrixArr() 根据skuArr设置矩阵数组的坐标点
 ```
 
-> 现在我们就可以根据上面这个矩阵数组进行`初步渲染`了,
+> 现在我们就可以根据上面这个矩阵数组进行`初步渲染`了，
 
 ```Html
 <div v-for="(property, propertyIndex) in state.properties">
@@ -315,7 +315,7 @@ const initMatrixArr = () => {
 const handleClickAttribute = (propertyIndex, attributeIndex) => {
   //点击的某个单项规格属性
   const attribute = state.properties[propertyIndex].attributes[attributeIndex];
-  // 若选项置灰,直接返回,表现为点击无响应
+  // 若选项置灰，直接返回，表现为点击无响应
   if (attribute.isDisabled) {
     return;
   }
@@ -332,25 +332,25 @@ const handleClickAttribute = (propertyIndex, attributeIndex) => {
     });
   }
   state.selected = [];
-  state.properties.forEach((property) => {
-    property.attributes.forEach((attr) => {
+  state.properties.forEach((property: any) => {
+    property.attributes.forEach((attr: any) => {
       if (attr.isActive) {
         state.selected.push(attr.value);
       }
     });
   });
-  state.properties.forEach((prop) => {
-    prop.attributes.forEach((attr) => {
+  state.properties.forEach((prop: any) => {
+    prop.attributes.forEach((attr: any) => {
       attr.isDisabled = !canAttributeSelect(attr);
     });
   });
 };
-const canAttributeSelect = (attribute) => {
+const canAttributeSelect = (attribute: any) => {
   if (!state.selected || !state.selected.length || attribute.isActive) {
     return true;
   }
   let res = [];
-  state.selected.forEach((value) => {
+  state.selected.forEach((value: any) => {
     const index1 = state.vertexArr.indexOf(value);
     const index2 = state.vertexArr.indexOf(attribute.value);
     res.push(state.matrixArr[index1][index2]);
@@ -370,7 +370,7 @@ const canAttributeSelect = (attribute) => {
 };
 ```
 
-> 到此看起来已经实现了一个看着还不错的解法 🤔,但是此时我们又发现了一个问题,当点击同一层级规格下的属性时例如`颜色`,我们点击了其中一个属性选项后发现同级别下的其他属性却不可以点击了,这是因为我们的初始矩阵数组还没真正完善,[你看](#matrixarr)同级别下其他属性坐标点为 0,我们应该实现同层级下属性的切换(在有库存的情况下)即坐标点值为 1,如下
+> 到此看起来已经实现了一个看着还不错的解法 🤔，但是此时我们又发现了一个问题,当点击同一层级规格下的属性时例如`颜色`，我们点击了其中一个属性选项后发现同级别下的其他属性却不可以点击了，这是因为我们的初始矩阵数组还没真正完善，[你看](#matrixarr)同级别下其他属性坐标点为 0,我们应该实现同层级下属性的切换(在有库存的情况下)即坐标点值为 1，如下
 
 <table>
   <tr>
@@ -487,5 +487,5 @@ const initMatrixArr = () => {
 //initMatrixArr() 根据skuArr设置矩阵数组的坐标点
 ```
 
-> 至此我们实现了一个还算能用的 SKU 算法 😜 其实它还能继续改进完善,剩下的就看你的发挥了！！
+> 至此我们实现了一个还算能用的 SKU 算法 😜 其实它还能继续改进完善，剩下的就看你的发挥了！！
 > 记得还有 实现你自己的 🤪 CSS 代码 o~
